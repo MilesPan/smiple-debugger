@@ -95,8 +95,7 @@ export class DebugAdapter extends AbstractDebugAdapter{
   }
   
   async startSession(): Promise<void> {
-    console.log('startSession')
-    const nodeDebug2 = path.join(__dirname, `./downloads/vscode-node-debug2/out/src/nodeDebug.js`);
+    const nodeDebug2 = path.join(__dirname, `./downloads/debug2/out/src/nodeDebug.js`);
     const forkOptions: cp.ForkOptions = {
       env: process.env,
       execArgv: [],

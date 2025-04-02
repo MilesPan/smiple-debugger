@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import path from "path-browserify";
 import ReconnectingWebSocket from "reconnecting-websocket";
 import { DebugProtocol } from ".././debugAdapter";
@@ -9,7 +9,6 @@ let file: any = null;
 let defaultThreadId: any = null;
 let isDebugging = false;
 let defaultFrameId: any = null;
-let location: any = null;
 const breakpoints = [1, 2, 3];
 let variables = [];
 
@@ -36,10 +35,13 @@ function App() {
         if (message.type === "event") {
           if (message.event === "output") {
             if (message.body.locationReference) {
-              console.log("locationReferencexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", message.body.locationReference);
+              console.log(
+                "locationReferencexxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+                message.body.locationReference
+              );
               location = message.body.locationReference;
             }
-            console.log('output', outputSeq++, message.body);
+            console.log("output", outputSeq++, message.body);
           } else if (message.event === "initialized") {
             console.log("initialized");
             isDebugging = true;
@@ -138,15 +140,6 @@ function App() {
               type: "request",
             };
             dapWebsocket.current?.send(JSON.stringify(threadsMessage));
-            const locationMessage: any = {
-              seq: seq++,
-              command: "locations",
-              type: "request",
-              arguments: {
-                locationReference: location,
-              }
-            };
-            dapWebsocket.current?.send(JSON.stringify(locationMessage));
           } else if (message.command === "threads") {
             console.log("threads response", message);
             // 6. 获取到threads后，获取栈帧
@@ -202,8 +195,6 @@ function App() {
               };
               dapWebsocket.current?.send(JSON.stringify(scopeMessage));
             }
-          } else if (message.command === "locations") {
-            console.log("locations response", message);
           } else if (message.command === "scopes") {
             console.log("scopes response", message.body.scopes[0]);
             const variablesMessage: any = {
